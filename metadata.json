@@ -1,0 +1,6 @@
+{
+  "name": "Thane Rivers Official Store",
+  "description": "Exclusive merchandise and VIP celebrity experiences from Thane Rivers, the Viking Superstar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

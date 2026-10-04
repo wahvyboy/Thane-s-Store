@@ -1,5 +1,5 @@
 import { CartItem } from '../types';
-import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Check } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 
 interface CartDrawerProps {
@@ -52,10 +52,10 @@ export function CartDrawer({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer border border-slate-200"
               aria-label="Close bag"
             >
-              <X className="w-5 h-5 stroke-[2.5]" />
+              Close
             </button>
           </div>
 

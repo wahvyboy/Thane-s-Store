@@ -99,9 +99,9 @@ export function OurStorySection({ onExploreVault }: OurStorySectionProps) {
               <button
                 type="button"
                 onClick={() => setIsEditingUrl(false)}
-                className="text-xs text-slate-400 px-1 cursor-pointer"
+                className="text-xs text-slate-400 hover:text-slate-600 px-1 cursor-pointer"
               >
-                ✕
+                Cancel
               </button>
             </form>
           )}

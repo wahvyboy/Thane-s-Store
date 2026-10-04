@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CartItem, CustomerOrderForm } from '../types';
 import { PRODUCTS } from '../data/products';
-import { X, Trash2, Plus, Minus, Mail, Copy, Check, ShoppingBag } from 'lucide-react';
+import { Trash2, Plus, Minus, Mail, Copy, Check, ShoppingBag } from 'lucide-react';
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -110,10 +110,10 @@ ROUTING: order@thaneriver.shop | Support: support@thaneriver.shop
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-white hover:bg-white/10"
+            className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white/90 hover:text-white bg-white/15 hover:bg-white/25 border border-white/25 transition-colors cursor-pointer"
             aria-label="Close"
           >
-            <X className="w-6 h-6 stroke-[2.5]" />
+            Close
           </button>
         </div>
 

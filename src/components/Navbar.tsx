@@ -83,24 +83,10 @@ export function Navbar({ cartCount, onOpenCart, onNavigate, onSelectProductById 
             </button>
           </div>
 
-          {/* Right: Accessibility + Search + Shopping Bag Icons */}
-          <div className="flex items-center gap-2.5 sm:gap-4 text-[#1A1A1A]">
+          {/* Right: Search + Shopping Bag Icons (Cross/accessibility icon removed) */}
+          <div className="flex items-center gap-3 sm:gap-4 text-[#1A1A1A]">
             
-            {/* 1. Accessibility Icon */}
-            <button
-              onClick={() => alert("High contrast & accessibility mode active.")}
-              className="p-1 hover:text-[#233EB6] transition-colors cursor-pointer"
-              title="Accessibility"
-              aria-label="Accessibility options"
-            >
-              <svg viewBox="0 0 24 24" className="w-[20px] h-[20px] fill-none stroke-current stroke-[1.8]">
-                <circle cx="12" cy="12" r="9.5" />
-                <circle cx="12" cy="7.2" r="1.3" fill="currentColor" />
-                <path d="M6.5 10.8h11M12 10.8v5.5M9.2 19.5l2.8-3.5 2.8 3.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-
-            {/* 2. Search Icon */}
+            {/* Search Icon */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
               className="p-1 hover:text-[#233EB6] transition-colors cursor-pointer"
@@ -112,7 +98,7 @@ export function Navbar({ cartCount, onOpenCart, onNavigate, onSelectProductById 
               </svg>
             </button>
 
-            {/* 3. Shopping Bag Icon */}
+            {/* Shopping Bag Icon */}
             <button
               onClick={onOpenCart}
               className="p-1.5 hover:text-[#233EB6] transition-colors relative cursor-pointer"
@@ -150,7 +136,7 @@ export function Navbar({ cartCount, onOpenCart, onNavigate, onSelectProductById 
               />
               <button
                 onClick={() => setSearchOpen(false)}
-                className="text-xs font-semibold text-slate-500 hover:text-slate-900 px-2 py-1 cursor-pointer"
+                className="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 px-2 py-1 cursor-pointer"
               >
                 Close
               </button>
@@ -166,7 +152,7 @@ export function Navbar({ cartCount, onOpenCart, onNavigate, onSelectProductById 
                       setSearchOpen(false);
                       setSearchQuery('');
                     }}
-                    className="w-full p-2 rounded-lg bg-white border border-slate-200 hover:border-[#233EB6] text-left text-xs flex items-center justify-between transition-colors"
+                    className="w-full p-2 rounded-lg bg-white border border-slate-200 hover:border-[#233EB6] text-left text-xs flex items-center justify-between transition-colors cursor-pointer"
                   >
                     <span className="font-bold text-slate-800">{prod.name}</span>
                     <span className="text-[#233EB6] font-mono font-bold">${prod.price.toLocaleString()} USD</span>
@@ -189,7 +175,7 @@ export function Navbar({ cartCount, onOpenCart, onNavigate, onSelectProductById 
             
             {/* Top Bar of Mobile Drawer: Light periwinkle blue #7F95E8 */}
             <div className="p-4 bg-[#7F95E8] text-white flex items-center justify-between">
-              <div className="flex items-center gap-2 mx-auto pl-6">
+              <div className="flex items-center gap-2 pl-2">
                 <img src="/logo.svg" alt="Thane Rivers Logo" className="w-6 h-6 brightness-200" />
                 <span className="text-xl font-black tracking-tight lowercase">
                   thane<span className="font-extrabold text-blue-100">rivers</span>
@@ -197,12 +183,10 @@ export function Navbar({ cartCount, onOpenCart, onNavigate, onSelectProductById 
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-1 rounded-full text-white hover:bg-white/10 cursor-pointer"
+                className="px-3 py-1 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
                 aria-label="Close menu"
               >
-                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current stroke-[2.5]">
-                  <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                Close
               </button>
             </div>
 

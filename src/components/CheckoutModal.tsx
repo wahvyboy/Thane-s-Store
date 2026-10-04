@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CartItem, CustomerOrderForm } from '../types';
-import { X, Mail, Check, Copy, ShieldCheck, ShoppingBag, ArrowLeft, Clock } from 'lucide-react';
+import { Mail, Check, Copy, ShieldCheck, Clock } from 'lucide-react';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -132,10 +132,10 @@ Thank you for shopping at Thane Rivers. Our concierge will be in touch shortly.`
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
             aria-label="Close modal"
           >
-            <X className="w-5 h-5 stroke-[2.5]" />
+            Close
           </button>
         </div>
 

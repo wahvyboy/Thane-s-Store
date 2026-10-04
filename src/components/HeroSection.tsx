@@ -10,7 +10,7 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
 
-  // Guaranteed continuous looping video playback across desktop and mobile devices
+  // Guaranteed continuous looping video playback using hero video from assets folder
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -66,10 +66,10 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
       {/* 1. Hero Video Section with dynamic multi-device responsive height */}
       <div className="relative w-full min-h-[520px] sm:min-h-[640px] h-[75vh] sm:h-[85vh] max-h-[880px] bg-slate-950 overflow-hidden flex items-center justify-center">
         
-        {/* Continuous Looping HTML5 Background Video */}
+        {/* Continuous Looping HTML5 Background Video using asset hero video */}
         <video
           ref={videoRef}
-          src="/hero-video.mp4"
+          src={heroVideo}
           autoPlay
           loop
           muted
@@ -89,8 +89,8 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
           }}
           className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-[center_35%] filter brightness-[0.72] contrast-[1.05]"
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
           <source src={heroVideo} type="video/mp4" />
+          <source src="/hero-video.mp4" type="video/mp4" />
         </video>
 
         {/* Soft vignette scrim over video for crisp text contrast */}
@@ -164,7 +164,7 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* Ocean Waves graphic transition into Royal Blue (starfish removed) */}
+        {/* Ocean Waves graphic transition into Royal Blue */}
         <div className="w-full h-12 sm:h-16 mt-3 relative">
           <svg viewBox="0 0 1440 80" fill="none" className="w-full h-full preserve-3d" preserveAspectRatio="none">
             {/* Back Wave: Darker Teal */}

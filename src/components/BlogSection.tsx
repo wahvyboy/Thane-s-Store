@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { BLOG_POSTS, BlogPost } from '../data/blogPosts';
-import { Search, X, BookOpen, Clock, Calendar, ArrowRight, Share2, Check } from 'lucide-react';
+import { Search, BookOpen, Clock, Calendar, ArrowRight, Share2, Check } from 'lucide-react';
 
 interface BlogSectionProps {
   onQuickOrder?: (productId: string) => void;
@@ -176,10 +176,10 @@ export function BlogSection({ onQuickOrder }: BlogSectionProps) {
                 </button>
                 <button
                   onClick={() => setActivePost(null)}
-                  className="p-1.5 text-slate-600 hover:text-black rounded-full hover:bg-white transition-colors cursor-pointer"
-                  aria-label="Close"
+                  className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-black hover:bg-white border border-slate-200 transition-colors cursor-pointer"
+                  aria-label="Close modal"
                 >
-                  <X className="w-5 h-5" />
+                  Close
                 </button>
               </div>
             </div>

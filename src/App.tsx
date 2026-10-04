@@ -16,25 +16,32 @@ import { SocialSection } from './components/SocialSection';
 import { ReviewSlider } from './components/ReviewSlider';
 import { BlogSection } from './components/BlogSection';
 import { Footer } from './components/Footer';
-import { OrderModal } from './components/OrderModal';
-import { CheckCircle2 } from 'lucide-react';
+import { ShopCatalog } from './components/ShopCatalog';
+import { ProductDetailView } from './components/ProductDetailView';
+import { CartDrawer } from './components/CartDrawer';
+import { CheckoutModal } from './components/CheckoutModal';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 
 export default function App() {
+  const [currentView, setCurrentView] = useState<'home' | 'shop' | 'product-detail'>('home');
+  const [selectedProduct, setSelectedProduct] = useState<Product>(PRODUCTS[0]);
+
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
-      const saved = localStorage.getItem('thane_rivers_cart');
+      const saved = localStorage.getItem('thane_rivers_cart_v2');
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
     }
   });
 
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     try {
-      localStorage.setItem('thane_rivers_cart', JSON.stringify(cart));
+      localStorage.setItem('thane_rivers_cart_v2', JSON.stringify(cart));
     } catch {
       // Storage fallback
     }
@@ -47,33 +54,59 @@ export default function App() {
     }, 3500);
   };
 
-  const handleAddToCart = (product: Product, variant: string, openModal = true) => {
+  const handleAddToCart = (
+    product: Product,
+    variant: string,
+    size: string = 'L',
+    quantity: number = 1,
+    openDrawer: boolean = true
+  ) => {
     setCart((prevCart) => {
       const existingIndex = prevCart.findIndex(
-        (item) => item.product.id === product.id && item.selectedVariant === variant
+        (item) =>
+          item.product.id === product.id &&
+          item.selectedVariant === variant &&
+          item.selectedSize === size
       );
 
       if (existingIndex > -1) {
         const updated = [...prevCart];
-        updated[existingIndex].quantity += 1;
+        updated[existingIndex].quantity += quantity;
         return updated;
       } else {
-        return [...prevCart, { product, quantity: 1, selectedVariant: variant }];
+        return [
+          ...prevCart,
+          {
+            product,
+            quantity,
+            selectedVariant: variant || product.variants[0],
+            selectedSize: size || 'L',
+          },
+        ];
       }
     });
 
-    showToast(`Added "${product.name}" to cart`);
+    showToast(`Added ${quantity}x "${product.name}" (${size}) to bag`);
 
-    if (openModal) {
-      setIsOrderModalOpen(true);
+    if (openDrawer) {
+      setIsCartOpen(true);
     }
   };
 
-  const handleUpdateQuantity = (productId: string, variant: string, delta: number) => {
+  const handleUpdateQuantity = (
+    productId: string,
+    variant: string,
+    size: string,
+    delta: number
+  ) => {
     setCart((prevCart) => {
       return prevCart
         .map((item) => {
-          if (item.product.id === productId && item.selectedVariant === variant) {
+          if (
+            item.product.id === productId &&
+            item.selectedVariant === variant &&
+            item.selectedSize === size
+          ) {
             const newQty = item.quantity + delta;
             return newQty > 0 ? { ...item, quantity: newQty } : null;
           }
@@ -83,10 +116,15 @@ export default function App() {
     });
   };
 
-  const handleRemoveItem = (productId: string, variant: string) => {
+  const handleRemoveItem = (productId: string, variant: string, size: string) => {
     setCart((prevCart) =>
       prevCart.filter(
-        (item) => !(item.product.id === productId && item.selectedVariant === variant)
+        (item) =>
+          !(
+            item.product.id === productId &&
+            item.selectedVariant === variant &&
+            item.selectedSize === size
+          )
       )
     );
   };
@@ -95,99 +133,179 @@ export default function App() {
     setCart([]);
   };
 
-  const scrollToSection = (sectionId: string) => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+  const handleOpenProductDetail = (product: Product) => {
+    setSelectedProduct(product);
+    setCurrentView('product-detail');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenProductDetailById = (productId: string) => {
+    const found = PRODUCTS.find((p) => p.id === productId) || PRODUCTS[0];
+    handleOpenProductDetail(found);
+  };
+
+  const handleNavigation = (sectionOrView: string) => {
+    if (sectionOrView === 'shop' || sectionOrView === 'store' || sectionOrView === 'products') {
+      setCurrentView('shop');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (sectionOrView === 'home' || sectionOrView === 'hero') {
+      setCurrentView('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // If currently on shop or PDP, first return to home then scroll to section
+    if (currentView !== 'home') {
+      setCurrentView('home');
+      setTimeout(() => {
+        const el = document.getElementById(sectionOrView);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const el = document.getElementById(sectionOrView);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const totalCartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans selection:bg-[#264BD8] selection:text-white">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans selection:bg-[#233EB6] selection:text-white">
       
-      {/* 1. White Navbar with Spiral Logo & Right Icons matching reference */}
+      {/* 1. Official Navbar with Concentric Vortex Logo & Global Icons */}
       <Navbar
         cartCount={totalCartItemCount}
-        onOpenCart={() => setIsOrderModalOpen(true)}
-        onNavigate={scrollToSection}
+        onOpenCart={() => setIsCartOpen(true)}
+        onNavigate={handleNavigation}
+        onSelectProductById={handleOpenProductDetailById}
       />
 
-      {/* Main Page Flow matching user brief & screenshots word for word */}
+      {/* Main View Switcher: Home View / Dedicated Shopify-Style Shop View / Product Detail View */}
       <main className="flex-1">
-        
-        {/* 2. Hero Section: Video + "SALE SALE SALE" ocean banner + "AS SEEN ON" */}
-        <HeroSection
-          onQuickOrder={() => {
-            handleAddToCart(PRODUCTS[0], PRODUCTS[0].variants[0], true);
-          }}
-        />
+        {currentView === 'shop' ? (
+          /* Dedicated Shopify-Style Shop Catalog View */
+          <ShopCatalog
+            onSelectProduct={handleOpenProductDetail}
+            onAddToCart={(product, variant, size) => handleAddToCart(product, variant, size, 1, true)}
+            onBackToHome={() => handleNavigation('home')}
+          />
+        ) : currentView === 'product-detail' ? (
+          /* Dedicated Shopify-Style Product Detail View (PDP) */
+          <ProductDetailView
+            product={selectedProduct}
+            onAddToCart={(product, variant, size, quantity) =>
+              handleAddToCart(product, variant, size, quantity, true)
+            }
+            onBackToCatalog={() => setCurrentView('shop')}
+            onSelectProduct={handleOpenProductDetail}
+          />
+        ) : (
+          /* Main Brand Flagship Experience */
+          <>
+            {/* 2. Hero Section: Multi-Device HTML5 Video with Programmatic Muted Autoplay + Sound Toggle */}
+            <HeroSection
+              onExploreShop={() => handleNavigation('shop')}
+            />
 
-        {/* 3. Body: Royal Blue Showcase with auto-changing products (no moving button) */}
-        <ProductShowcase
-          onAddToCart={(product, variant) => handleAddToCart(product, variant, true)}
-        />
+            {/* 3. Product Showcase: Royal Blue with auto-changing products */}
+            <ProductShowcase
+              onAddToCart={(product, variant, size) => handleAddToCart(product, variant, size, 1, true)}
+              onSelectProduct={handleOpenProductDetail}
+            />
 
-        {/* 4. 2-Column Wireframe Bento Grid showcasing other products on clean white */}
-        <WireframeGrid
-          onSelectProduct={(product) => handleAddToCart(product, product.variants[0], true)}
-          onOpenLoversGifting={() => scrollToSection('lovers-gifting')}
-        />
+            {/* Quick Catalog Discovery Banner */}
+            <section className="w-full bg-[#182B7A] text-white py-6 px-4">
+              <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div>
+                  <h3 className="text-base sm:text-lg font-black uppercase tracking-wider">
+                    EXPLORE THE THANE RIVERS VAULT
+                  </h3>
+                  <p className="text-xs text-blue-200 mt-0.5">
+                    Browse all 3 serialized signature releases with direct white-glove courier dispatch.
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleNavigation('shop')}
+                  className="px-6 py-2.5 rounded-full bg-white text-[#182B7A] hover:bg-slate-100 text-xs font-black uppercase tracking-widest transition-all shadow-md flex items-center gap-1.5 cursor-pointer shrink-0"
+                >
+                  <span>OPEN OFFICIAL VAULT (3)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </section>
 
-        {/* 5. Lovers Gifting (from corporate gifting) with products sliding up automatically */}
-        <LoversGifting
-          onSelectProduct={(product) => handleAddToCart(product, product.variants[0], true)}
-        />
+            {/* 4. 2-Column Wireframe Bento Grid */}
+            <WireframeGrid
+              onSelectProduct={handleOpenProductDetail}
+              onOpenLoversGifting={() => handleNavigation('lovers-gifting')}
+            />
 
-        {/* 6. Our Story: YouTube video + cyan slow auto-moving text + secondary video */}
-        <OurStorySection
-          onExploreVault={() => scrollToSection('products')}
-        />
+            {/* 5. Lovers Gifting Suite */}
+            <LoversGifting
+              onSelectProduct={handleOpenProductDetail}
+            />
 
-        {/* 7. Instagram Section with blue verified checkmark & follower count */}
-        <SocialSection />
+            {/* 6. Our Story: YouTube Video Embed + Slow Marquee + Explore Merch Slideshow */}
+            <OurStorySection
+              onExploreVault={() => handleNavigation('shop')}
+            />
 
-        {/* 8. What Our Customers Think: Moving side-to-side with circular slideshow buttons */}
-        <ReviewSlider />
+            {/* 7. Instagram Verified Social Section */}
+            <SocialSection />
 
-        {/* 9. The Thane Rivers Archives & Journal (50 SEO/AEO/GEO Articles) */}
-        <BlogSection
-          onQuickOrder={(productId) => {
-            const product = PRODUCTS.find((p) => p.id === productId) || PRODUCTS[0];
-            handleAddToCart(product, product.variants[0], true);
-          }}
-        />
+            {/* 8. What Our Customers Think: Customer Reviews Carousel */}
+            <ReviewSlider />
 
+            {/* 9. The Thane Rivers Archives & Journal (50 Articles) */}
+            <BlogSection
+              onQuickOrder={(productId) => handleOpenProductDetailById(productId)}
+            />
+          </>
+        )}
       </main>
 
-      {/* 9. Footer: Black background with spiral logo, stacked links (NO login/signin, NO store locations) */}
+      {/* Footer: Black background with spiral logo, direct links, and concierge contact */}
       <Footer
-        onNavigate={scrollToSection}
-        onOpenCart={() => setIsOrderModalOpen(true)}
+        onNavigate={handleNavigation}
+        onOpenCart={() => setIsCartOpen(true)}
+        onSelectProductById={handleOpenProductDetailById}
       />
 
-      {/* 10. Order Summary & Contact Details Form Modal */}
-      <OrderModal
-        isOpen={isOrderModalOpen}
-        onClose={() => setIsOrderModalOpen(false)}
+      {/* Slide-over Cart Bag Drawer */}
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
         cart={cart}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
-        onAddToCart={(product, variant) => handleAddToCart(product, variant, false)}
+        onProceedToCheckout={() => {
+          setIsCartOpen(false);
+          setIsCheckoutOpen(true);
+        }}
+        onSelectProduct={handleOpenProductDetailById}
+      />
+
+      {/* Concierge Checkout Modal & Order Confirmation */}
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cart={cart}
         onClearCart={handleClearCart}
       />
 
       {/* Notification Toast */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#264BD8] text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-in slide-in-from-bottom duration-300">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#233EB6] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 animate-in slide-in-from-bottom duration-300 border border-white/20">
           <CheckCircle2 className="w-5 h-5 text-white shrink-0" />
           <span className="text-xs font-bold">{toastMessage}</span>
           <button
-            onClick={() => setIsOrderModalOpen(true)}
-            className="ml-2 text-xs bg-white text-[#264BD8] px-2.5 py-0.5 rounded-full font-bold uppercase hover:bg-slate-100"
+            onClick={() => setIsCartOpen(true)}
+            className="ml-2 text-xs bg-white text-[#233EB6] px-3 py-1 rounded-full font-bold uppercase hover:bg-slate-100 transition-colors cursor-pointer shadow-xs"
           >
-            Cart
+            Bag ({totalCartItemCount})
           </button>
         </div>
       )}

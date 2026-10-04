@@ -1,49 +1,149 @@
+import { useRef, useEffect, useState } from 'react';
+import { Volume2, VolumeX } from 'lucide-react';
+import heroVideo from '../assets/images/hero video.mp4';
+
 interface HeroSectionProps {
-  onQuickOrder: () => void;
+  onExploreShop: () => void;
 }
 
-export function HeroSection({ onQuickOrder }: HeroSectionProps) {
+export function HeroSection({ onExploreShop }: HeroSectionProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  // Guaranteed continuous looping video playback across desktop and mobile devices
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Enforce DOM-level muted and loop attributes required by browser autoplay policies
+    video.defaultMuted = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.loop = true;
+
+    const playVideo = () => {
+      video.muted = true;
+      const promise = video.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          // If browser restricted automatic start, listen for first touch/click
+          const unlock = () => {
+            video.muted = true;
+            video.play().catch(() => {});
+          };
+          window.addEventListener('click', unlock, { once: true });
+          window.addEventListener('touchstart', unlock, { once: true });
+          window.addEventListener('scroll', unlock, { once: true });
+        });
+      }
+    };
+
+    // If video is already loaded, start playing immediately
+    if (video.readyState >= 2) {
+      playVideo();
+    } else {
+      video.addEventListener('loadeddata', playVideo, { once: true });
+      video.addEventListener('canplay', playVideo, { once: true });
+    }
+
+    return () => {
+      video.removeEventListener('loadeddata', playVideo);
+      video.removeEventListener('canplay', playVideo);
+    };
+  }, []);
+
+  const toggleAudio = () => {
+    if (videoRef.current) {
+      const nextMuted = !isMuted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
+    }
+  };
+
   return (
     <section id="hero" className="w-full bg-white select-none">
       
-      {/* 1. Hero Video Section matching Screenshot_20260929_131546_Firefox.jpg 100% */}
-      <div className="relative w-full h-[52vh] sm:h-[62vh] min-h-[420px] max-h-[620px] bg-slate-900 overflow-hidden flex items-center justify-center">
+      {/* 1. Hero Video Section with dynamic multi-device responsive height */}
+      <div className="relative w-full min-h-[520px] sm:min-h-[640px] h-[75vh] sm:h-[85vh] max-h-[880px] bg-slate-950 overflow-hidden flex items-center justify-center">
         
-        {/* Background Video / Close-up Product Footage - Absolute positioned to fill entire hero */}
-        <img
-          src="/src/assets/images/thane_silk_pyjamas_model_1790860264040.jpg"
-          alt="The Original Viking Celebrity"
-          className="absolute inset-0 w-full h-full object-cover object-[center_35%] filter brightness-[0.72] contrast-[1.05]"
-          referrerPolicy="no-referrer"
-        />
+        {/* Continuous Looping HTML5 Background Video */}
+        <video
+          ref={videoRef}
+          src="/hero-video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          // @ts-ignore
+          webkit-playsinline="true"
+          preload="auto"
+          onEnded={(e) => {
+            // Guaranteed seamless repeat
+            const v = e.currentTarget;
+            v.currentTime = 0;
+            v.play().catch(() => {});
+          }}
+          onCanPlay={(e) => {
+            e.currentTarget.muted = true;
+            e.currentTarget.play().catch(() => {});
+          }}
+          className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-[center_35%] filter brightness-[0.72] contrast-[1.05]"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src={heroVideo} type="video/mp4" />
+        </video>
 
-        {/* Soft vignette scrim over image for crisp text contrast */}
-        <div className="absolute inset-0 bg-black/35 pointer-events-none" />
+        {/* Soft vignette scrim over video for crisp text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/60 pointer-events-none" />
 
-        {/* Centered Overlay Content: Exactly matching Screenshot_20260929_131546_Firefox.jpg */}
-        <div className="relative z-10 w-full max-w-lg mx-auto px-4 text-center flex flex-col items-center justify-center">
+        {/* Centered Overlay Content: Luxury Norse branding */}
+        <div className="relative z-10 w-full max-w-xl mx-auto px-4 text-center flex flex-col items-center justify-center">
           
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold uppercase tracking-[0.25em] mb-4">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+            Official Flagship Store
+          </div>
+
           {/* "The Original" */}
-          <h1 className="text-white text-2xl sm:text-4xl font-normal tracking-wide drop-shadow-sm font-sans leading-tight">
+          <h1 className="text-white/90 text-2xl sm:text-4xl font-normal tracking-wide drop-shadow-sm font-sans leading-tight">
             The Original
           </h1>
 
-          {/* "Portable Blender" -> "Viking Celebrity" */}
-          <h2 className="text-white text-3xl sm:text-5xl font-black italic tracking-wide drop-shadow-md font-sans mt-0.5 sm:mt-1 leading-tight">
+          {/* "Viking Celebrity" */}
+          <h2 className="text-white text-3xl sm:text-5xl md:text-6xl font-black italic tracking-wide drop-shadow-md font-sans mt-0.5 sm:mt-1 leading-tight">
             Viking Celebrity
           </h2>
 
-          {/* THE BUTTON: Modern, Stylish, Crisp White Pill Button matching reference */}
+          <p className="text-blue-100 text-xs sm:text-sm font-medium tracking-wider max-w-md mx-auto mt-3 drop-shadow">
+            Grade 6A Mulberry Silk Loungewear • Double-Fired Stoneware • Serialized VIP Access
+          </p>
+
+          {/* THE BUTTON: Modern, Stylish, Crisp White Pill Button navigating to Shop View */}
           <button
-            onClick={onQuickOrder}
-            className="mt-6 sm:mt-8 px-10 sm:px-14 py-3.5 sm:py-4 rounded-full bg-white hover:bg-slate-50 text-[#1C2C60] font-black text-xs sm:text-sm uppercase tracking-[0.18em] shadow-[0_6px_20px_rgba(0,0,0,0.35)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.45)] transition-all duration-200 active:scale-95 whitespace-nowrap cursor-pointer"
+            onClick={onExploreShop}
+            className="mt-6 sm:mt-8 px-10 sm:px-14 py-3.5 sm:py-4 rounded-full bg-white hover:bg-slate-50 text-[#1C2C60] font-black text-xs sm:text-sm uppercase tracking-[0.18em] shadow-[0_6px_25px_rgba(0,0,0,0.4)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-200 active:scale-95 whitespace-nowrap cursor-pointer hover:ring-2 hover:ring-white/80"
           >
             GET YOURS TODAY
           </button>
         </div>
+
+        {/* Luxury Audio Toggle Button (Mute/Unmute) with glassmorphic pill design */}
+        <button
+          onClick={toggleAudio}
+          className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-20 flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-black/45 hover:bg-black/70 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer shadow-lg active:scale-95"
+          aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
+        >
+          {isMuted ? (
+            <VolumeX className="w-3.5 h-3.5 text-white/90" />
+          ) : (
+            <Volume2 className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+          )}
+          <span>{isMuted ? 'Sound Off' : 'Sound On'}</span>
+        </button>
+
       </div>
 
-      {/* 2. Iconic Sales Offer Banner matching Screenshot_20260929_131546_Firefox.jpg */}
+      {/* 2. Sales Offer Banner */}
       <div className="w-full bg-[#FFF6DC] text-[#1C2640] pt-6 sm:pt-8 pb-0 text-center relative overflow-hidden">
         <div className="max-w-xl mx-auto px-4">
           
@@ -57,14 +157,14 @@ export function HeroSection({ onQuickOrder }: HeroSectionProps) {
             15% OFF SELECT BUNDLES
           </div>
 
-          {/* "MINT AND LAVENDER / AUTOMATICALLY APPLIED" -> for Thane Rivers */}
+          {/* "PINJAMAS AND CUP / AUTOMATICALLY APPLIED" */}
           <div className="mt-2.5 text-[11px] sm:text-xs font-black tracking-[0.16em] uppercase text-[#1C2640] space-y-0.5">
             <p>PINJAMAS AND CUP</p>
             <p>AUTOMATICALLY APPLIED</p>
           </div>
         </div>
 
-        {/* Ocean Waves graphic transition into Royal Blue with starfish on the right edge */}
+        {/* Ocean Waves graphic transition into Royal Blue (starfish removed) */}
         <div className="w-full h-12 sm:h-16 mt-3 relative">
           <svg viewBox="0 0 1440 80" fill="none" className="w-full h-full preserve-3d" preserveAspectRatio="none">
             {/* Back Wave: Darker Teal */}
@@ -79,13 +179,6 @@ export function HeroSection({ onQuickOrder }: HeroSectionProps) {
               fill="#00C4CC"
             />
           </svg>
-
-          {/* Illustrated Starfish on the right beach bank matching reference screenshot 1 */}
-          <div className="absolute right-4 sm:right-12 bottom-4 sm:bottom-6 pointer-events-none z-10">
-            <svg viewBox="0 0 40 40" className="w-6 h-6 sm:w-8 sm:h-8 text-[#FF6347] fill-current drop-shadow-sm transform rotate-12">
-              <path d="M20 2 L24.5 14 L37.5 15 L27.5 23 L31 36 L20 28.5 L9 36 L12.5 23 L2.5 15 L15.5 14 Z" />
-            </svg>
-          </div>
         </div>
       </div>
 
@@ -93,12 +186,10 @@ export function HeroSection({ onQuickOrder }: HeroSectionProps) {
       <div className="w-full bg-[#28367A] text-white py-3.5 px-4 border-t border-[#00C4CC]/30">
         <div className="max-w-4xl mx-auto flex flex-col items-center justify-center gap-2 text-center">
           
-          {/* "AS SEEN ON:" */}
           <p className="text-[10px] sm:text-[11px] uppercase font-bold tracking-[0.25em] text-[#9AA6DE]">
             AS SEEN ON:
           </p>
 
-          {/* Media Brand Logos matching exact screenshot */}
           <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-white font-sans text-sm tracking-wider opacity-90 pt-0.5">
             
             {/* MSN */}
@@ -126,7 +217,7 @@ export function HeroSection({ onQuickOrder }: HeroSectionProps) {
               Rolling Stone
             </span>
 
-            {/* Living (Martha Stewart Living) */}
+            {/* Living */}
             <span className="font-serif font-bold text-xs text-white/90 tracking-wide">
               Living
             </span>

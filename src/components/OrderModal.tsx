@@ -7,9 +7,9 @@ interface OrderModalProps {
   isOpen: boolean;
   onClose: () => void;
   cart: CartItem[];
-  onUpdateQuantity: (productId: string, variant: string, delta: number) => void;
-  onRemoveItem: (productId: string, variant: string) => void;
-  onAddToCart: (product: any, variant: string) => void;
+  onUpdateQuantity: (productId: string, variant: string, size: string, delta: number) => void;
+  onRemoveItem: (productId: string, variant: string, size: string) => void;
+  onAddToCart: (product: any, variant: string, size?: string) => void;
   onClearCart: () => void;
 }
 
@@ -28,7 +28,6 @@ export function OrderModal({
     phone: '',
     shippingAddress: '',
     pyjamaSize: 'L (Standard Fit)',
-    preferredContact: 'email',
     specialNotes: '',
   });
 
@@ -44,9 +43,9 @@ export function OrderModal({
     const itemsList = cart
       .map(
         (item, idx) =>
-          `${idx + 1}. ${item.product.name} [${item.selectedVariant}] x ${item.quantity} = $${(
+          `${idx + 1}. ${item.product.name} [${item.selectedVariant}] (Size: ${item.selectedSize}) x ${item.quantity} = $${(
             item.product.price * item.quantity
-          ).toLocaleString()}`
+          ).toLocaleString()} USD`
       )
       .join('\n');
 
@@ -58,7 +57,6 @@ Email Address: ${formData.email}
 Phone / WhatsApp: ${formData.phone}
 Shipping Address: ${formData.shippingAddress}
 Selected Size: ${formData.pyjamaSize}
-Preferred Contact Method: ${formData.preferredContact.toUpperCase()}
 Special Requests / Notes: ${formData.specialNotes || 'None'}
 
 --------------------------------------------------
@@ -68,6 +66,7 @@ ${itemsList}
 --------------------------------------------------
 TOTAL ORDER AMOUNT: $${totalAmount.toLocaleString()} USD
 STATUS: Pending Concierge Outreach & Final Transaction
+ROUTING: order@thaneriver.shop | Support: support@thaneriver.shop
 ==================================================
 *Please contact me directly to finalize this order.*`;
   };
@@ -90,7 +89,7 @@ STATUS: Pending Concierge Outreach & Final Transaction
 
     const subject = encodeURIComponent(`Thane Rivers Official Order Request - ${formData.fullName}`);
     const body = encodeURIComponent(generateOrderSummaryText());
-    const mailtoUrl = `mailto:purchase@thanerivers.shop?cc=vibeswithmadu@gmail.com&subject=${subject}&body=${body}`;
+    const mailtoUrl = `mailto:order@thaneriver.shop?subject=${subject}&body=${body}`;
 
     window.location.href = mailtoUrl;
     setOrderSubmitted(true);
@@ -98,18 +97,13 @@ STATUS: Pending Concierge Outreach & Final Transaction
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      {/* Backdrop */}
       <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={onClose} />
 
-      {/* Modal Dialog Content in clean white matching BlendJet look */}
       <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl text-slate-900 overflow-hidden my-auto max-h-[92vh] flex flex-col z-10 border border-slate-200">
         
-        {/* Top Header: Royal Blue */}
-        <div className="p-4 sm:p-5 bg-[#264BD8] text-white flex items-center justify-between">
+        {/* Top Header */}
+        <div className="p-4 sm:p-5 bg-[#233EB6] text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-            </svg>
             <h3 className="font-sans font-black text-base sm:text-lg tracking-wide uppercase">
               ORDER SUMMARY & CONTACT DETAILS
             </h3>
@@ -134,13 +128,13 @@ STATUS: Pending Concierge Outreach & Final Transaction
                 EMAIL PRE-FILLED & READY!
               </h4>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Your pre-filled email client was opened with your order summary and contact details. We will reach out to you directly to finalize payment and confirm shipment!
+                Your pre-filled email client was opened to dispatch directly to <strong>order@thaneriver.shop</strong>. We will reach out to you directly to confirm delivery and measurements.
               </p>
 
               <div className="pt-3 flex flex-col sm:flex-row gap-2 justify-center">
                 <button
                   onClick={handleCopyClipboard}
-                  className="px-5 py-3 rounded-full border border-slate-300 text-slate-800 font-bold text-xs uppercase hover:bg-slate-50 flex items-center justify-center gap-1.5"
+                  className="px-5 py-3 rounded-full border border-slate-300 text-slate-800 font-bold text-xs uppercase hover:bg-slate-50 flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                   <span>{copied ? 'Copied!' : 'Copy Order Text'}</span>
@@ -151,7 +145,7 @@ STATUS: Pending Concierge Outreach & Final Transaction
                     onClearCart();
                     onClose();
                   }}
-                  className="px-6 py-3 rounded-full bg-[#264BD8] text-white font-extrabold text-xs uppercase tracking-wider hover:bg-[#1E3EB8]"
+                  className="px-6 py-3 rounded-full bg-[#233EB6] text-white font-extrabold text-xs uppercase tracking-wider hover:bg-[#182B7A] cursor-pointer"
                 >
                   Close Window
                 </button>
@@ -175,11 +169,11 @@ STATUS: Pending Concierge Outreach & Final Transaction
                         {PRODUCTS.map((p) => (
                           <button
                             key={p.id}
-                            onClick={() => onAddToCart(p, p.variants[0])}
-                            className="w-full p-2 rounded-lg bg-white border border-slate-200 hover:border-blue-500 text-xs flex justify-between items-center"
+                            onClick={() => onAddToCart(p, p.variants[0], 'L')}
+                            className="w-full p-2 rounded-lg bg-white border border-slate-200 hover:border-blue-500 text-xs flex justify-between items-center cursor-pointer"
                           >
                             <span className="font-bold text-slate-800 truncate max-w-[140px]">{p.name}</span>
-                            <span className="text-[#264BD8] font-bold">${p.price.toLocaleString()}</span>
+                            <span className="text-[#233EB6] font-bold">${p.price.toLocaleString()}</span>
                           </button>
                         ))}
                       </div>
@@ -188,11 +182,11 @@ STATUS: Pending Concierge Outreach & Final Transaction
                     <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                       {cart.map((item) => (
                         <div
-                          key={`${item.product.id}-${item.selectedVariant}`}
+                          key={`${item.product.id}-${item.selectedVariant}-${item.selectedSize}`}
                           className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200"
                         >
                           <img
-                            src={item.product.image}
+                            src={item.product.images[0] || item.product.image}
                             alt={item.product.name}
                             className="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0"
                             referrerPolicy="no-referrer"
@@ -202,31 +196,31 @@ STATUS: Pending Concierge Outreach & Final Transaction
                               {item.product.name}
                             </h5>
                             <p className="text-[10px] text-slate-500 truncate">
-                              {item.selectedVariant}
+                              {item.selectedVariant} • Size: {item.selectedSize}
                             </p>
-                            <p className="text-xs font-extrabold text-[#264BD8]">
-                              ${item.product.price.toLocaleString()}
+                            <p className="text-xs font-extrabold text-[#233EB6]">
+                              ${item.product.price.toLocaleString()} USD
                             </p>
                           </div>
 
                           <div className="flex items-center gap-1.5 shrink-0">
                             <div className="flex items-center rounded-md bg-white border border-slate-300">
                               <button
-                                onClick={() => onUpdateQuantity(item.product.id, item.selectedVariant, -1)}
+                                onClick={() => onUpdateQuantity(item.product.id, item.selectedVariant, item.selectedSize, -1)}
                                 className="p-1 hover:text-blue-600 text-slate-600"
                               >
                                 <Minus className="w-3 h-3" />
                               </button>
                               <span className="px-1.5 text-xs font-bold">{item.quantity}</span>
                               <button
-                                onClick={() => onUpdateQuantity(item.product.id, item.selectedVariant, 1)}
+                                onClick={() => onUpdateQuantity(item.product.id, item.selectedVariant, item.selectedSize, 1)}
                                 className="p-1 hover:text-blue-600 text-slate-600"
                               >
                                 <Plus className="w-3 h-3" />
                               </button>
                             </div>
                             <button
-                              onClick={() => onRemoveItem(item.product.id, item.selectedVariant)}
+                              onClick={() => onRemoveItem(item.product.id, item.selectedVariant, item.selectedSize)}
                               className="p-1 text-slate-400 hover:text-red-600"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -250,7 +244,7 @@ STATUS: Pending Concierge Outreach & Final Transaction
                     </div>
                     <div className="flex justify-between text-sm font-black text-slate-900 pt-2 border-t border-slate-200">
                       <span>TOTAL:</span>
-                      <span className="text-[#264BD8] text-base">${totalAmount.toLocaleString()} USD</span>
+                      <span className="text-[#233EB6] text-base">${totalAmount.toLocaleString()} USD</span>
                     </div>
                   </div>
                 )}
@@ -262,7 +256,7 @@ STATUS: Pending Concierge Outreach & Final Transaction
                   Customer Contact Information
                 </h4>
                 <p className="text-[11px] text-slate-500 mb-3">
-                  Fill in your details below. Clicking the button will open a pre-filled email to our team so we can reach out directly to finalize the transaction.
+                  Official inquiries are routed directly to <strong>order@thaneriver.shop</strong>.
                 </p>
 
                 {errorMsg && (
@@ -282,7 +276,7 @@ STATUS: Pending Concierge Outreach & Final Transaction
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                       placeholder="e.g. John Smith"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#264BD8]"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#233EB6]"
                     />
                   </div>
 
@@ -297,7 +291,7 @@ STATUS: Pending Concierge Outreach & Final Transaction
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="john@example.com"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#264BD8]"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#233EB6]"
                       />
                     </div>
                     <div>
@@ -310,7 +304,7 @@ STATUS: Pending Concierge Outreach & Final Transaction
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="+1 (555) 000-0000"
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#264BD8]"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#233EB6]"
                       />
                     </div>
                   </div>
@@ -325,42 +319,25 @@ STATUS: Pending Concierge Outreach & Final Transaction
                       value={formData.shippingAddress}
                       onChange={(e) => setFormData({ ...formData, shippingAddress: e.target.value })}
                       placeholder="Street, City, State/Province, Country, Zip Code"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#264BD8]"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#233EB6]"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold tracking-wider text-slate-600 mb-0.5">
-                        Preferred Contact
-                      </label>
-                      <select
-                        value={formData.preferredContact}
-                        onChange={(e) => setFormData({ ...formData, preferredContact: e.target.value as any })}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#264BD8]"
-                      >
-                        <option value="email">Email</option>
-                        <option value="whatsapp">WhatsApp</option>
-                        <option value="phone">Phone Call</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold tracking-wider text-slate-600 mb-0.5">
-                        Pinjama Size
-                      </label>
-                      <select
-                        value={formData.pyjamaSize}
-                        onChange={(e) => setFormData({ ...formData, pyjamaSize: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#264BD8]"
-                      >
-                        <option value="S">S (Small)</option>
-                        <option value="M">M (Medium)</option>
-                        <option value="L (Standard Fit)">L (Standard Fit)</option>
-                        <option value="XL">XL (Extra Large)</option>
-                        <option value="XXL">XXL (Titan Fit)</option>
-                      </select>
-                    </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold tracking-wider text-slate-600 mb-0.5">
+                      Pinjama Size Confirmation
+                    </label>
+                    <select
+                      value={formData.pyjamaSize}
+                      onChange={(e) => setFormData({ ...formData, pyjamaSize: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#233EB6]"
+                    >
+                      <option value="S">S (Small)</option>
+                      <option value="M">M (Medium)</option>
+                      <option value="L (Standard Fit)">L (Standard Fit)</option>
+                      <option value="XL">XL (Extra Large)</option>
+                      <option value="XXL">XXL (Titan Fit)</option>
+                    </select>
                   </div>
 
                   <div>
@@ -371,8 +348,8 @@ STATUS: Pending Concierge Outreach & Final Transaction
                       rows={2}
                       value={formData.specialNotes}
                       onChange={(e) => setFormData({ ...formData, specialNotes: e.target.value })}
-                      placeholder="Notes on custom cup engraving or superstar schedule..."
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#264BD8] resize-none"
+                      placeholder="Notes on custom cup engraving or concierge schedule..."
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#233EB6] resize-none"
                     />
                   </div>
 
@@ -380,20 +357,10 @@ STATUS: Pending Concierge Outreach & Final Transaction
                     <button
                       type="submit"
                       disabled={cart.length === 0}
-                      className="w-full py-3.5 rounded-full bg-[#264BD8] hover:bg-[#1E3EB8] text-white font-black text-xs uppercase tracking-widest shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="w-full py-3.5 rounded-full bg-[#233EB6] hover:bg-[#182B7A] text-white font-black text-xs uppercase tracking-widest shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                     >
                       <Mail className="w-4 h-4" />
-                      <span>GENERATE PRE-FILLED ORDER EMAIL</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleCopyClipboard}
-                      disabled={cart.length === 0}
-                      className="w-full py-2 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40"
-                    >
-                      {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>{copied ? 'Order Summary Copied!' : 'Copy Order Summary to Clipboard'}</span>
+                      <span>DISPATCH TO ORDER@THANERIVER.SHOP</span>
                     </button>
                   </div>
                 </form>

@@ -4,28 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
+    <!-- Primary Browser Tab Icon & Luxury Vortex Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+
     <!-- Primary SEO Meta Tags -->
     <title>Thane Rivers Official Store | Luxury Silk Pyjamas, Ceramic Mugs & VIP Experience</title>
     <meta name="title" content="Thane Rivers Official Store | Luxury Silk Pyjamas, Ceramic Mugs & VIP Experience" />
-    <meta name="description" content="Shop official Thane Rivers merchandise: 22-Momme Mulberry silk pyjamas, artisanal ceramic mugs, VIP Titan membership cards, and the 7-day superstar retreat in Norway." />
-    <meta name="keywords" content="Thane Rivers, Viking celebrity, Thane Rivers pyjamas, Thane Rivers ceramic cup, VIP Titan card, One Week with the Superstar, luxury loungewear, Mulberry silk pyjamas, lovers gifting, Nordic superstar merchandise" />
+    <meta name="description" content="Official Thane Rivers flagship store. Handcrafted 22-Momme Mulberry silk loungewear suits, double-fired artisanal stoneware ceramic mugs, serialized titanium VIP Member Cards, and ultra-exclusive 10-day private residencies." />
+    <meta name="keywords" content="Thane Rivers Official Store, Mulberry silk pyjamas, Thane Rivers ceramic mug, VIP Member Card, 10 Days with Thane Rivers, luxury Nordic loungewear" />
     <meta name="author" content="Thane Rivers Brand House" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <link rel="canonical" href="https://thanerivers.com" />
+    <link rel="canonical" href="https://thaneriver.shop" />
 
-    <!-- GEO / Regional Targeting for High Global Ranking -->
-    <meta name="geo.region" content="NO;US;GB;CH;DE" />
-    <meta name="geo.placename" content="Oslo, London, Zurich, New York, Los Angeles" />
+    <!-- GEO / Regional Targeting for Elite Global Markets (Norway, US, UK, Switzerland, Germany, UAE) -->
+    <meta name="geo.region" content="NO;US;GB;CH;DE;AE" />
+    <meta name="geo.placename" content="Oslo, London, Zurich, New York, Los Angeles, Dubai" />
     <meta name="geo.position" content="59.9139;10.7522" />
     <meta name="ICBM" content="59.9139, 10.7522" />
 
-    <!-- OpenGraph / Facebook Social Meta Tags -->
+    <!-- OpenGraph / Facebook Social Meta Tags (Preview image set to /pj.jpeg) -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://thanerivers.com" />
-    <meta property="og:site_name" content="Thane Rivers Official" />
-    <meta property="og:title" content="Thane Rivers Official | Luxury Silk Pyjamas & VIP Celebrity Experience" />
+    <meta property="og:url" content="https://thaneriver.shop" />
+    <meta property="og:site_name" content="Thane Rivers Official Store" />
+    <meta property="og:title" content="Thane Rivers Official Store | Luxury Silk Pyjamas & VIP Celebrity Experience" />
     <meta property="og:description" content="Handcrafted 22-Momme silk loungewear, artisanal ceramic stoneware mugs, and direct VIP access to Viking superstar Thane Rivers." />
-    <meta property="og:image" content="/src/assets/images/thane_silk_pyjamas_model_1790860264040.jpg" />
+    <meta property="og:image" content="/pj.jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter / X Card Meta Tags -->
@@ -33,8 +39,8 @@
     <meta name="twitter:site" content="@thanerivers" />
     <meta name="twitter:creator" content="@thanerivers" />
     <meta name="twitter:title" content="Thane Rivers Official Store | The Viking Celebrity" />
-    <meta name="twitter:description" content="Exclusive 22-Momme silk pyjamas, handcrafted ceramic mugs, and 7-day VIP retreat with Thane Rivers." />
-    <meta name="twitter:image" content="/src/assets/images/thane_silk_pyjamas_model_1790860264040.jpg" />
+    <meta name="twitter:description" content="Exclusive 22-Momme silk pyjamas, handcrafted ceramic mugs, VIP Member Card, and 10-day private residency with Thane Rivers." />
+    <meta name="twitter:image" content="/pj.jpeg" />
 
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,11 +53,41 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "Store",
+          "@id": "https://thaneriver.shop/#store",
+          "name": "Thane Rivers Official Store",
+          "url": "https://thaneriver.shop",
+          "logo": "https://thaneriver.shop/logo.svg",
+          "image": "https://thaneriver.shop/pj.jpeg",
+          "priceRange": "$$$$",
+          "email": "support@thaneriver.shop",
+          "telephone": "+47 22 00 00 00",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Oslo",
+            "addressCountry": "NO"
+          }
+        },
+        {
           "@type": "Organization",
-          "@id": "https://thanerivers.com/#organization",
+          "@id": "https://thaneriver.shop/#organization",
           "name": "Thane Rivers",
-          "url": "https://thanerivers.com",
-          "logo": "https://thanerivers.com/src/assets/images/thane_luxury_ceramic_mugs_1790860245177.jpg",
+          "url": "https://thaneriver.shop",
+          "logo": "https://thaneriver.shop/logo.svg",
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "email": "order@thaneriver.shop",
+              "contactType": "sales",
+              "availableLanguage": ["English", "Norwegian", "German"]
+            },
+            {
+              "@type": "ContactPoint",
+              "email": "support@thaneriver.shop",
+              "contactType": "customer service",
+              "availableLanguage": ["English", "Norwegian", "German"]
+            }
+          ],
           "sameAs": [
             "https://instagram.com/thanerivers",
             "https://youtube.com/@thanerivers",
@@ -66,129 +102,129 @@
         },
         {
           "@type": "WebSite",
-          "@id": "https://thanerivers.com/#website",
-          "url": "https://thanerivers.com",
+          "@id": "https://thaneriver.shop/#website",
+          "url": "https://thaneriver.shop",
           "name": "Thane Rivers Official Store",
           "publisher": {
-            "@id": "https://thanerivers.com/#organization"
+            "@id": "https://thaneriver.shop/#organization"
           },
           "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://thanerivers.com/?search={search_term_string}",
+            "target": "https://thaneriver.shop/?search={search_term_string}",
             "query-input": "required name=search_term_string"
           }
         },
         {
           "@type": "Product",
-          "@id": "https://thanerivers.com/#product-pyjamas-cup",
-          "name": "Thane's Pinjamas & Cup Combo",
-          "image": "/src/assets/images/thane_silk_pyjamas_model_1790860264040.jpg",
-          "description": "Handcrafted Grade 6A pure 22-Momme Mulberry silk sleepwear in signature Nordic sky blue with burgundy piping, paired with Thane Rivers' double-fired ceramic stoneware mug.",
+          "@id": "https://thaneriver.shop/#product-pyjamas-mug-combo",
+          "name": "Thane's Pinjamas & Ceramic Mug Combo",
+          "image": "https://thaneriver.shop/pj.jpeg",
+          "description": "Handcrafted Grade 6A pure 22-Momme Mulberry silk loungewear suit in signature Nordic sky blue with burgundy piping, paired with Thane Rivers' iconic double-fired artisanal stoneware ceramic mug.",
           "sku": "TR-SILK-MUG-001",
           "brand": {
-            "@id": "https://thanerivers.com/#organization"
+            "@id": "https://thaneriver.shop/#organization"
           },
           "offers": {
             "@type": "Offer",
             "price": "999",
             "priceCurrency": "USD",
             "availability": "https://schema.org/InStock",
-            "url": "https://thanerivers.com/#products"
+            "url": "https://thaneriver.shop"
           },
           "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": "4.98",
-            "reviewCount": "2400"
+            "ratingValue": "4.99",
+            "reviewCount": "2480"
           }
         },
         {
           "@type": "Product",
-          "@id": "https://thanerivers.com/#product-titan-card",
-          "name": "VIP Titan Membership Card",
-          "image": "/src/assets/images/thane_luxury_ceramic_mugs_1790860245177.jpg",
-          "description": "Serialized titanium VIP Titan membership card granting lifetime priority backstage access to Thane Rivers world tours, private Telegram community, and complete Pinjamas and Cup merch bundle.",
+          "@id": "https://thaneriver.shop/#product-vip-member-card",
+          "name": "VIP Member Card",
+          "image": "https://thaneriver.shop/vip-card.jpeg",
+          "description": "Official serialized titanium VIP membership card granting exclusive visual and backstage access to Thane Rivers, bundled with the complete Pinjamas & Mug merch combo.",
           "sku": "TR-TITAN-CARD-002",
           "brand": {
-            "@id": "https://thanerivers.com/#organization"
+            "@id": "https://thaneriver.shop/#organization"
           },
           "offers": {
             "@type": "Offer",
             "price": "2099",
             "priceCurrency": "USD",
             "availability": "https://schema.org/InStock",
-            "url": "https://thanerivers.com/#products"
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.99",
-            "reviewCount": "890"
-          }
-        },
-        {
-          "@type": "Product",
-          "@id": "https://thanerivers.com/#product-superstar-week",
-          "name": "One Week with the Superstar",
-          "image": "/src/assets/images/thane_silk_pyjamas_model_1790860264040.jpg",
-          "description": "Ultra-exclusive 7-day private retreat in Norway with Thane Rivers. Private Viking strength training, Michelin dining, backstage tour pass, and complete collector's wardrobe suite.",
-          "sku": "TR-SUPERSTAR-7DAY",
-          "brand": {
-            "@id": "https://thanerivers.com/#organization"
-          },
-          "offers": {
-            "@type": "Offer",
-            "price": "3499",
-            "priceCurrency": "USD",
-            "availability": "https://schema.org/InStock",
-            "url": "https://thanerivers.com/#products"
+            "url": "https://thaneriver.shop"
           },
           "aggregateRating": {
             "@type": "AggregateRating",
             "ratingValue": "5.0",
-            "reviewCount": "48"
+            "reviewCount": "912"
+          }
+        },
+        {
+          "@type": "Product",
+          "@id": "https://thaneriver.shop/#product-10-day-stay",
+          "name": "10-Day Stay with Thane Rivers",
+          "image": "https://thaneriver.shop/mansion.jpeg",
+          "description": "10-day private all-inclusive residency with Thane Rivers at his private estate. Includes 1-on-1 Viking training and mentorship, Michelin private dining, VIP Member Card access, and the complete Pinjamas & Mug collector's suite.",
+          "sku": "TR-RESIDENCY-10DAY",
+          "brand": {
+            "@id": "https://thaneriver.shop/#organization"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "4999",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/LimitedAvailability",
+            "url": "https://thaneriver.shop"
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5.0",
+            "reviewCount": "54"
           }
         },
         {
           "@type": "FAQPage",
-          "@id": "https://thanerivers.com/#faq",
+          "@id": "https://thaneriver.shop/#faq",
           "mainEntity": [
             {
               "@type": "Question",
               "name": "Who is Thane Rivers, the Viking celebrity?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Thane Rivers is an international Viking celebrity, athlete, and superstar known for his ancient Norse fitness discipline, bespoke 22-Momme Mulberry silk sleepwear, and handcrafted ceramic stoneware coffee mugs."
+                "text": "Thane Rivers is an international Viking celebrity, athlete, and creator known for his disciplined Norse fitness philosophy, bespoke 22-Momme Mulberry silk loungewear, and handcrafted ceramic stoneware coffee mugs."
               }
             },
             {
               "@type": "Question",
-              "name": "What is included in Thane's Pinjamas & Cup Combo ($999)?",
+              "name": "What is included in Thane's Pinjamas & Ceramic Mug Combo ($999)?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "The signature bundle includes a tailored 100% 22-Momme pure Mulberry silk pyjama suit in sky blue with red contrast piping, the artisanal double-fired ceramic mug with royal blue thanerivers branding, and our signature white gift bag."
+                "text": "Handcrafted Grade 6A pure 22-Momme Mulberry silk loungewear suit in signature Nordic sky blue with burgundy piping, paired with Thane Rivers' iconic double-fired artisanal stoneware ceramic mug, custom luxury gift bag, and silk travel pouch."
               }
             },
             {
               "@type": "Question",
-              "name": "What perks does the VIP Titan Membership Card ($2,099) provide?",
+              "name": "What perks does the VIP Member Card ($2,099) provide?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "The VIP Titan Membership Card is a serialized titanium card granting lifetime backstage tour access, entry to Thane's private Telegram broadcast, and includes the full Pinjamas & Ceramic Cup merchandise bundle."
+                "text": "The VIP Member Card is an aerospace-grade serialized titanium card with cryptographic NFC verification that grants lifetime priority backstage access to Thane Rivers' arena tours, private Telegram community, and includes the full Pinjamas & Mug merchandise suite ($999 value)."
               }
             },
             {
               "@type": "Question",
-              "name": "What is the One Week with the Superstar experience ($3,499)?",
+              "name": "What is the 10-Day Stay with Thane Rivers ($4,999)?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "An all-inclusive 7-day private retreat in Norway living and training directly with Thane Rivers, including luxury private fjord estate accommodations, personal mentorship, private chef meals, and full merchandise suites."
+                "text": "An ultra-exclusive 10-day private all-inclusive residency with Thane Rivers at his private estate. Includes daily 1-on-1 Viking training and mentorship, Michelin private dining, titanium VIP Member Card access, private chauffeur and helicopter transfer, and the complete collector's merchandise suite."
               }
             },
             {
               "@type": "Question",
-              "name": "How does the checkout process work?",
+              "name": "How does the concierge checkout process work?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "To maintain white-glove luxury service, clients add items to their Order Vault and submit their contact details, which automatically formats a pre-filled direct inquiry email to Thane Rivers' concierge team to finalize the transaction."
+                "text": "To guarantee personalized white-glove service, clients select items in their bag, submit their delivery and pyjama sizing details, which immediately formats an official order request directly to order@thaneriver.shop. Our concierge contacts clients within 2 hours to confirm dispatch and custom tailoring."
               }
             }
           ]
@@ -197,9 +233,8 @@
     }
     </script>
   </head>
-  <body class="bg-white text-slate-900 antialiased selection:bg-[#2E4BC6] selection:text-white">
+  <body class="bg-white text-slate-900 antialiased selection:bg-[#233EB6] selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

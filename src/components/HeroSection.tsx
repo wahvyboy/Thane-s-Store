@@ -20,6 +20,10 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
     video.muted = true;
     video.playsInline = true;
     video.loop = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('x5-playsinline', 'true');
 
     const playVideo = () => {
       video.muted = true;
@@ -28,12 +32,14 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
         promise.catch(() => {
           // If browser restricted automatic start, listen for first touch/click
           const unlock = () => {
-            video.muted = true;
-            video.play().catch(() => {});
+            if (videoRef.current) {
+              videoRef.current.muted = true;
+              videoRef.current.play().catch(() => {});
+            }
           };
           window.addEventListener('click', unlock, { once: true });
-          window.addEventListener('touchstart', unlock, { once: true });
-          window.addEventListener('scroll', unlock, { once: true });
+          window.addEventListener('touchstart', unlock, { once: true, passive: true });
+          window.addEventListener('scroll', unlock, { once: true, passive: true });
         });
       }
     };
@@ -63,22 +69,27 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
   return (
     <section id="hero" className="w-full bg-white select-none">
       
-      {/* 1. Hero Video Section with dynamic multi-device responsive height */}
-      <div className="relative w-full min-h-[520px] sm:min-h-[640px] h-[75vh] sm:h-[85vh] max-h-[880px] bg-slate-950 overflow-hidden flex items-center justify-center">
+      {/* 1. Hero Video Section with dynamic multi-device responsive height (dvh for mobile address bar stability) */}
+      <div className="relative w-full min-h-[520px] sm:min-h-[640px] h-[75dvh] sm:h-[85dvh] max-h-[880px] bg-slate-950 overflow-hidden flex items-center justify-center">
         
-        {/* Continuous Looping HTML5 Background Video using asset hero video */}
+        {/* Continuous Looping HTML5 Background Video using asset hero video with rock-solid multi-device support */}
         <video
           ref={videoRef}
           src={heroVideo}
           autoPlay
           loop
           muted
+          // @ts-ignore
+          defaultMuted
           playsInline
           // @ts-ignore
           webkit-playsinline="true"
+          // @ts-ignore
+          x5-playsinline="true"
           preload="auto"
+          poster="/mansion.jpeg"
           onEnded={(e) => {
-            // Guaranteed seamless repeat
+            // Guaranteed seamless repeat across browsers
             const v = e.currentTarget;
             v.currentTime = 0;
             v.play().catch(() => {});
@@ -87,7 +98,7 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
             e.currentTarget.muted = true;
             e.currentTarget.play().catch(() => {});
           }}
-          className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-[center_35%] filter brightness-[0.72] contrast-[1.05]"
+          className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-[center_35%] filter brightness-[0.72] contrast-[1.05] pointer-events-none"
         >
           <source src={heroVideo} type="video/mp4" />
           <source src="/hero-video.mp4" type="video/mp4" />
@@ -97,7 +108,7 @@ export function HeroSection({ onExploreShop }: HeroSectionProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/60 pointer-events-none" />
 
         {/* Centered Overlay Content: Luxury Norse branding */}
-        <div className="relative z-10 w-full max-w-xl mx-auto px-4 text-center flex flex-col items-center justify-center">
+        <div className="relative z-10 w-full max-w-xl mx-auto px-4 text-center flex flex-col items-center justify-center pointer-events-auto">
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold uppercase tracking-[0.25em] mb-4">
             <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />

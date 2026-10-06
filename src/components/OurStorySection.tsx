@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import { MARQUEE_WORDS, LUXURY_IMAGES } from '../data/products';
-import { Youtube, Sparkles, X, RotateCcw, ShieldCheck, Award, Flame, Check } from 'lucide-react';
+import { Youtube, Sparkles, X, RotateCcw, ShieldCheck, Award, Flame, Check, ExternalLink } from 'lucide-react';
 
 interface OurStorySectionProps {
   onExploreVault: () => void;
 }
 
-// Universal parser for YouTube URLs (supports watch?v=, youtu.be/, shorts/, embed/, or direct ID)
+export const OFFICIAL_YOUTUBE_CHANNEL = 'https://www.youtube.com/@TheThaneRivers';
+const DEFAULT_VIDEO_ID = 'L61p2uyiMSo'; // Official cinematic Scandinavian/Norse documentary showcase
+
+// Universal parser for YouTube URLs (supports @channel, watch?v=, youtu.be/, shorts/, embed/, or direct ID)
 function parseYouTubeId(input: string): string | null {
   if (!input) return null;
-  const trimmed = input.trim();
+  const trimmed = input.trim().replace(/^https?:\/\/m\./, 'https://www.');
 
   // Regex handles: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID, youtube.com/shorts/ID
   const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
@@ -27,10 +30,8 @@ function parseYouTubeId(input: string): string | null {
   return null;
 }
 
-const DEFAULT_VIDEO_ID = 'L61p2uyiMSo'; // Official cinematic Scandinavian/Norse documentary trailer
-
 export function OurStorySection({ onExploreVault }: OurStorySectionProps) {
-  // Load saved video ID or use high-production Norse documentary placeholder
+  // Load saved video ID or use official documentary showcase
   const [videoId, setVideoId] = useState<string>(() => {
     try {
       const saved = localStorage.getItem('thane_rivers_story_video_id');
@@ -86,6 +87,12 @@ export function OurStorySection({ onExploreVault }: OurStorySectionProps) {
       setInputUrl('');
       setError(null);
       showToast('YouTube video successfully updated!');
+    } else if (inputUrl.includes('@TheThaneRivers') || inputUrl.includes('TheThaneRivers')) {
+      // If user pasted the channel link, direct to channel
+      window.open(OFFICIAL_YOUTUBE_CHANNEL, '_blank');
+      setIsModalOpen(false);
+      setInputUrl('');
+      showToast('Opened official @TheThaneRivers channel!');
     } else {
       setError('Invalid link. Please paste a valid YouTube watch link, youtu.be link, or video ID.');
     }
@@ -125,8 +132,22 @@ export function OurStorySection({ onExploreVault }: OurStorySectionProps) {
           From the ancient fjords of Norway to international stardom. Discover how Viking endurance and bespoke craftsmanship forged the world's most sought-after loungewear.
         </p>
 
+        {/* Official Channel Link Badge */}
+        <div className="mt-5 flex items-center justify-center gap-3">
+          <a
+            href={OFFICIAL_YOUTUBE_CHANNEL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md hover:shadow-lg active:scale-95 cursor-pointer"
+          >
+            <Youtube className="w-4 h-4 fill-white" />
+            <span>Watch On YouTube @TheThaneRivers</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-90" />
+          </a>
+        </div>
+
         {/* Theater Player Container */}
-        <div className="mt-8 relative max-w-4xl mx-auto">
+        <div className="mt-7 relative max-w-4xl mx-auto">
           {/* Subtle ambient colored glow behind the video player */}
           <div className="absolute -inset-1 sm:-inset-2 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#1C2C60]/20 via-[#00C4CC]/30 to-[#1C2C60]/20 blur-xl opacity-70 pointer-events-none" />
 
@@ -143,12 +164,20 @@ export function OurStorySection({ onExploreVault }: OurStorySectionProps) {
             </div>
           </div>
 
-          {/* Player Bar Actions: Update Link Button + Video Status badge */}
+          {/* Player Bar Actions: Channel handle + Update Link Button */}
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 px-2">
-            <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Cinema Mode • 1080p Ultra HD</span>
-            </div>
+            <a
+              href={OFFICIAL_YOUTUBE_CHANNEL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-xs text-slate-700 hover:text-red-600 font-semibold transition-colors"
+            >
+              <Youtube className="w-4 h-4 text-red-600" />
+              <span>Official Channel: <strong>@TheThaneRivers</strong></span>
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-normal">
+                45.5K+ Subscribers
+              </span>
+            </a>
 
             <button
               onClick={() => {
@@ -157,7 +186,6 @@ export function OurStorySection({ onExploreVault }: OurStorySectionProps) {
               }}
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-[#1C2C60] text-xs font-bold tracking-wide transition-all shadow-sm hover:shadow active:scale-95 cursor-pointer"
             >
-              <Youtube className="w-3.5 h-3.5 text-red-600" />
               <span>Update Video Link</span>
             </button>
           </div>
@@ -307,7 +335,7 @@ export function OurStorySection({ onExploreVault }: OurStorySectionProps) {
               </div>
               <div>
                 <h3 className="text-base font-bold text-slate-900">Update Story Video</h3>
-                <p className="text-xs text-slate-500">Paste any YouTube video URL or ID</p>
+                <p className="text-xs text-slate-500">Paste any YouTube video link or @TheThaneRivers</p>
               </div>
             </div>
 
@@ -329,7 +357,7 @@ export function OurStorySection({ onExploreVault }: OurStorySectionProps) {
                 />
                 {error && <p className="mt-1.5 text-xs text-red-600 font-medium">{error}</p>}
                 <p className="mt-1.5 text-[11px] text-slate-400">
-                  Supports standard watch links, youtu.be, shorts, and embed links.
+                  Supports YouTube watch links, youtu.be, shorts, and embed links.
                 </p>
               </div>
 
